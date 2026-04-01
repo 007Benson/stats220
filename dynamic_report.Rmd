@@ -1,0 +1,73 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+h2 {
+  color: #2c3e50;
+}
+
+p {
+  line-height: 1.6;
+}
+```
+
+## ## Analysis of Daily Step Counts and Lifestyle Factors
+
+This dynamic report analyses daily step counts collected through a Google Form. The dataset includes variables such as the number of steps taken each day, the main activity performed, and the weather conditions.
+
+The purpose of this analysis is to explore how different lifestyle factors, such as activity type and weather, are associated with daily step counts.
+
+```{r}
+library(tidyverse)
+
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQvf9MEZcYxYiSSxXHP9iRCQ8fUy5Q1OCGBU8a-ifgLBgczFVg8zpmePe4nKDcqvxZnqXxAGs7Mv9kx/pub?output=csv")
+
+latest_data <- logged_data %>%
+  rename(
+    timestamp = Timestamp,
+    steps = `How many steps did you walk today?`,
+    activity = `What was your main activity today?`,
+    check_time = `When did you check your step count?`,
+    weather = `What was the weather like today?`
+  )
+```
+The average number of steps recorded is `r round(mean(latest_data$steps), 2)`.
+
+The maximum number of steps recorded is `r max(latest_data$steps)`.
+
+```{r}
+ggplot(latest_data, aes(x = activity)) +
+  geom_bar(fill="#0000FF") +
+  labs(
+    title = "Main Activity Distribution",
+    x = "Activity",
+    y = "Count"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggplot(latest_data, aes(x = weather)) +
+  geom_bar(fill="#FF0000") +
+  labs(
+    title = "Weather Distribution",
+    x = "Weather",
+    y = "Count"
+  )
+```
+
+The bar chart below shows the distribution of different activity types recorded in the dataset. It helps us understand which activities are most common.
+
+The second bar chart shows the distribution of weather conditions. This allows us to observe how frequently each type of weather occurs in the data.
+
+![](https://c.tenor.com/-qBsG1HwR4oAAAAC/tenor.gif)
